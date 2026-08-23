@@ -4,6 +4,7 @@ from app.models.scraped_record import ScrapedRecord
 from app.models.validation_result import ValidationResult
 from app.models.failure_event import FailureEvent
 from app.models.healing_attempt import HealingAttempt
+from app.models.ai_diagnosis import AIDiagnosis
 
 __all__ = [
     "Source",
@@ -11,5 +12,6 @@ __all__ = [
     "ScrapedRecord",
     "ValidationResult",
     "FailureEvent",
-    "HealingAttempt"
+    "HealingAttempt",
+    "AIDiagnosis",
 ]

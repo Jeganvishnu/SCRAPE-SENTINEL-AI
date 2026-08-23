@@ -6,15 +6,15 @@
 
 ## Current Status
 
-**Phase 6 — Observability, Monitoring & Reliability Dashboard (Completed)**
+**Phase 7 — AI-Powered Scraper Intelligence (Completed)**
 
 ## Problem
 
-Traditional web-data pipelines silently break when website structure changes, causing data corruption or missing records without clear telemetry.
+Traditional web-data pipelines silently break when website structure changes, causing data corruption or missing records without clear telemetry or explainable root-cause diagnosis.
 
 ## Solution Architecture
 
-Scrape Sentinel AI uses Bright Data Scraper Studio to collect public web data, normalizes raw payloads, executes a deterministic Validation Engine, logs failure events and healing attempts, persists structured records to Supabase PostgreSQL, calculates transparent health scores (0–100), and visualizes the complete extraction lifecycle in real-time.
+Scrape Sentinel AI combines Bright Data Scraper Studio for web data collection, deterministic schema validation, explainable AI failure diagnosis with Safety Gate enforcement, automatic Phase 5 healing execution, and real-time observability telemetry.
 
 ```
 REAL BRIGHT DATA SCRAPER
@@ -33,30 +33,42 @@ VALIDATION RESULT
        ↓     ↓
    DATABASE  FAILURE EVENT
                 ↓
-          HEALING QUEUE
-                ↓
-┌─────────────────────────────────┐
-│ PHASE 6                         │
-│ Monitoring + Reliability        │
-│ Metrics + Timeline + Dashboard  │
-└─────────────────────────────────┘
+     ┌──────────────────┐
+     │ AI INTELLIGENCE  │
+     ├──────────────────┤
+     │ Context Builder  │
+     │ Root Cause       │
+     │ Evidence         │
+     │ Safety Gate      │
+     └────────┬─────────┘
+              ↓
+        HEALING QUEUE
+              ↓
+      RECOVERY SCRAPE
+              ↓
+     INDEPENDENT VALIDATION
+              ↓
+  ┌───────────┴───────────┐
+  ↓                       ↓
+VERIFIED              FAILED
+  ↓                       ↓
+PHASE 6 METRICS       MANUAL REVIEW
 ```
 
-## Phase 6 Features
+## Phase 7 AI Features
 
-- **Observability & Monitoring Endpoints**:
-  - `GET /metrics/overview` (Period: `24h`, `7d`, `30d`, `all`)
-  - `GET /metrics/sources/{source_id}`
-  - `GET /metrics/timeline`
-  - `GET /metrics/validation`
-  - `GET /metrics/schema/{source_id}`
-  - `GET /metrics/healing` (Recovery rate & MTTR calculation in seconds)
-  - `GET /ready` & `GET /system/status`
-- **Transparent Health Score (0–100)**: Weighted calculation based on success rate (25%), validation quality (20%), failure stability (15%), recovery rate (15%), record-count stability (10%), schema stability (10%), and execution reliability (5%).
-- **Health Badges**: Dynamic `HEALTHY`, `WARNING`, `DEGRADED`, and `CRITICAL` status badges with human-readable explanations.
-- **Run Lifecycle Visualization**: Visual step progression (`Scrape → Output → Validation → Failure → Healing → Recovery → Verified`) on `/runs/:id`.
-- **Live 30s Refresh**: Lightweight frontend polling refresh without full page reloads.
-- **Explicit Exclusions**: *Phase 7 AI/RAG intelligence features are intentionally not implemented until Phase 7.*
+- **Provider Abstraction**: Pluggable provider interface (`BaseAIProvider`) supporting `MockAIProvider` (offline/testing) and `OpenAIProvider` (`gpt-4o-mini`).
+- **Explainable Diagnosis**: Generates structured JSON root cause analysis with evidence bullet points and affected field lists.
+- **Safety Gate & Risk Policy**: Evaluates confidence ($\ge 0.85$ + LOW risk $\rightarrow$ Automatic Approval; Medium/Low confidence $\rightarrow$ Manual Human Review).
+- **Repair Allowlist**: Enforces strict repair type allowlist (`selector_update`, `field_mapping_update`, `schema_mapping_update`, `normalization_update`, `retry_adjustment`). Destructive operations are **BLOCKED**.
+- **Prompt Injection Defense**: Encapsulates scraped web payload data under `<UNTRUSTED_WEB_DATA>` to prevent prompt overrides or injection attacks.
+- **Repair Loop Protection**: Enforces maximum 3 repair attempts per failure event before forcing manual review.
+- **AI Fallback**: If AI is disabled or unavailable, seamlessly falls back to Phase 5 deterministic healing without application crash.
+- **AI Endpoints**:
+  - `GET /ai/status`
+  - `POST /ai/diagnose/{failure_id}`
+  - `POST /ai/repair-plan/{failure_id}`
+  - `GET /ai/history`
 
 ## Technology Stack
 
@@ -64,7 +76,7 @@ VALIDATION RESULT
 - **Backend**: Python + FastAPI + SQLAlchemy 2.0 + psycopg2-binary
 - **Scraping Engine**: Bright Data Scraper Studio (`@brightdata/cli`)
 - **Database**: PostgreSQL / Supabase
-- **Testing**: Pytest unit test suite (27 passing tests)
+- **Testing**: Pytest unit test suite (32 passing tests)
 
 ## Development Phases
 
@@ -74,7 +86,7 @@ VALIDATION RESULT
 - [x] Phase 4: Validation, failure detection & Supabase database
 - [x] Phase 5: Self-healing scraper engine foundation & `healing_attempts`
 - [x] Phase 6: Observability, monitoring & reliability dashboard
-- [ ] Phase 7: AI/RAG intelligence
+- [x] Phase 7: AI-powered scraper intelligence & safety gate
 - [ ] Phase 8: Automation & webhooks
 - [ ] Phase 9: Testing & security audit
 - [ ] Phase 10: Final submission & demo
@@ -98,7 +110,7 @@ npm run dev
 - **Frontend Dashboard**: http://localhost:5173
 - **Backend API Docs**: http://localhost:8000/docs
 - **Backend Health Check**: http://localhost:8000/health
-- **System Status**: http://localhost:8000/system/status
+- **AI Status API**: http://localhost:8000/ai/status
 
 ## AI Disclosure
 

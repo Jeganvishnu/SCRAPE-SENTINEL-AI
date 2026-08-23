@@ -2,12 +2,12 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.core.config import settings
 from app.core.logger_config import logger
-from app.api import health, sources, runs, failures, metrics
+from app.api import health, sources, runs, failures, metrics, ai
 
 app = FastAPI(
     title=settings.PROJECT_NAME,
     version=settings.VERSION,
-    description="Scrape Sentinel AI — Autonomous Self-Healing Web Data Pipeline API",
+    description="Scrape Sentinel AI — Autonomous Self-Healing & AI Scraper Intelligence API",
     docs_url="/docs",
     redoc_url="/redoc"
 )
@@ -33,10 +33,11 @@ app.include_router(sources.router)
 app.include_router(runs.router)
 app.include_router(failures.router)
 app.include_router(metrics.router)
+app.include_router(ai.router)
 
 @app.on_event("startup")
 async def startup_event():
-    logger.info("FastAPI Observability Application Starting Up...")
+    logger.info("FastAPI AI Scraper Intelligence Application Starting Up...")
 
 if __name__ == "__main__":
     import uvicorn

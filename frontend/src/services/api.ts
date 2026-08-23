@@ -47,6 +47,27 @@ export async function getHealingMetrics(period: string = '7d'): Promise<any> {
   return response.json();
 }
 
+export async function getAIStatus(): Promise<any> {
+  const response = await fetch(`${BACKEND_URL}/ai/status`);
+  if (!response.ok) throw new Error('Failed to fetch AI status');
+  return response.json();
+}
+
+export async function getAIHistory(sourceId?: string): Promise<any[]> {
+  const url = sourceId ? `${BACKEND_URL}/ai/history?source_id=${sourceId}` : `${BACKEND_URL}/ai/history`;
+  const response = await fetch(url);
+  if (!response.ok) throw new Error('Failed to fetch AI history');
+  return response.json();
+}
+
+export async function diagnoseFailure(failureId: string): Promise<any> {
+  const response = await fetch(`${BACKEND_URL}/ai/diagnose/${failureId}`, {
+    method: 'POST'
+  });
+  if (!response.ok) throw new Error(`Failed to trigger AI diagnosis for failure ${failureId}`);
+  return response.json();
+}
+
 export async function getSources(): Promise<Source[]> {
   const response = await fetch(`${BACKEND_URL}/sources`);
   if (!response.ok) throw new Error('Failed to fetch sources');
@@ -60,21 +81,6 @@ export async function getSources(): Promise<Source[]> {
     createdAt: item.created_at,
     updatedAt: item.updated_at
   }));
-}
-
-export async function getSource(id: string): Promise<Source> {
-  const response = await fetch(`${BACKEND_URL}/sources/${id}`);
-  if (!response.ok) throw new Error(`Failed to fetch source ${id}`);
-  const item = await response.json();
-  return {
-    id: item.id,
-    name: item.name,
-    url: item.url,
-    collectorId: item.collector_id,
-    status: item.status.toUpperCase(),
-    createdAt: item.created_at,
-    updatedAt: item.updated_at
-  };
 }
 
 export async function triggerScrape(sourceId: string): Promise<any> {
@@ -126,9 +132,20 @@ export async function getFailures(): Promise<HealingEvent[]> {
     failureType: item.failure_type.toUpperCase(),
     failureRate: 0,
     healPrompt: item.message,
-    healStatus: 'INITIATED',
+    healStatus: item.status.toUpperCase(),
     approvalStatus: 'PENDING',
     rerunStatus: 'PENDING',
     recoveryTimestamp: item.detected_at
   }));
+}
+
+export async function triggerHeal(failureId: string): Promise<any> {
+  const response = await fetch(`${BACKEND_URL}/failures/${failureId}/heal`, {
+    method: 'POST'
+  });
+  if (!response.ok) {
+    const err = await response.json();
+    throw new Error(err.detail || 'Healing execution failed');
+  }
+  return response.json();
 }
