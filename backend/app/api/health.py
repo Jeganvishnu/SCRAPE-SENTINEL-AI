@@ -13,7 +13,7 @@ router = APIRouter(tags=["Health"])
 )
 async def health_check():
     db_ok = check_database_connection()
-    bd_configured = bool(brightdata_settings.BRIGHT_DATA_COLLECTOR_ID)
+    bd_configured = bool(brightdata_settings.BRIGHT_DATA_COLLECTOR_ID and brightdata_settings.api_key)
     status_str = "healthy" if db_ok else "degraded"
 
     return {

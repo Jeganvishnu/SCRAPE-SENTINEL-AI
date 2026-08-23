@@ -22,7 +22,7 @@ class Settings(BaseSettings):
     AI_MAX_REPAIR_ATTEMPTS: int = 3
 
     class Config:
-        env_file = ".env"
+        env_file = (".env", "../.env")
         extra = "ignore"
 
 settings = Settings()
