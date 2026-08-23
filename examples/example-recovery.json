@@ -1,0 +1,24 @@
+{
+  "scrape_run_id": "99998888-7777-6666-5555-444433332222",
+  "status": "success",
+  "records_found": 2,
+  "validation_score": 100.0,
+  "validation_status": "passed",
+  "recovered_payload": [
+    {
+      "title": "PostgreSQL 17 Support & Performance Enhancements",
+      "published_date": "2026-08-20T10:00:00Z",
+      "category": "Database",
+      "description": "Supabase now natively supports PostgreSQL 17 across all project tiers with improved query performance.",
+      "url": "https://supabase.com/changelog/postgres-17-support"
+    },
+    {
+      "title": "Multi-Factor Authentication via WebAuthn",
+      "published_date": "2026-08-18T14:30:00Z",
+      "category": "Auth",
+      "description": "Added support for hardware security keys and Passkeys in Supabase Auth.",
+      "url": "https://supabase.com/changelog/webauthn-mfa"
+    }
+  ],
+  "verification_timestamp": "2026-08-22T08:16:15Z"
+}

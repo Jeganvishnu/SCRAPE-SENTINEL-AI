@@ -1,117 +1,164 @@
 # Scrape Sentinel AI
 
-## Tagline
+> **"An explainable self-healing web scraping platform powered by Bright Data Scraper Studio."**
 
-"When the web changes, your data pipeline should not stop."
+---
 
-## Current Status
+## Value Statement
+Scrape Sentinel AI transforms brittle web scraping into an observable, self-healing recovery system. It detects scraper failures, uses historical evidence and AI-assisted diagnosis to propose constrained repairs, executes approved repairs through a self-healing engine, and only declares recovery after independent validation succeeds.
 
-**Phase 7 — AI-Powered Scraper Intelligence (Completed)**
+---
 
-## Problem
+## Problem & Solution Architecture
 
-Traditional web-data pipelines silently break when website structure changes, causing data corruption or missing records without clear telemetry or explainable root-cause diagnosis.
+### The Problem
+Traditional web data pipelines silently break when target websites change their layout or DOM structure. Selector changes and missing fields corrupt downstream analytics, machine learning datasets, and AI RAG pipelines. Manual scraper maintenance consumes engineering time and leads to undetected data loss.
 
-## Solution Architecture
-
-Scrape Sentinel AI combines Bright Data Scraper Studio for web data collection, deterministic schema validation, explainable AI failure diagnosis with Safety Gate enforcement, automatic Phase 5 healing execution, and real-time observability telemetry.
+### The Solution
+Scrape Sentinel AI combines **Bright Data Scraper Studio** for web extraction, a deterministic **Validation Engine**, explainable **AI Root-Cause Diagnosis**, **Safety Gate** policy enforcement, automated **Phase 5 Healing Engine** execution, and real-time **Phase 6 Observability Telemetry**.
 
 ```
-REAL BRIGHT DATA SCRAPER
-          ↓
-RAW OUTPUT
-          ↓
-NORMALIZATION
-          ↓
-VALIDATION ENGINE
-          ↓
-VALIDATION RESULT
-          ↓
-       ┌──┴──┐
-       ↓     ↓
-     VALID  FAILED
-       ↓     ↓
-   DATABASE  FAILURE EVENT
-                ↓
-     ┌──────────────────┐
-     │ AI INTELLIGENCE  │
-     ├──────────────────┤
-     │ Context Builder  │
-     │ Root Cause       │
-     │ Evidence         │
-     │ Safety Gate      │
-     └────────┬─────────┘
-              ↓
-        HEALING QUEUE
-              ↓
-      RECOVERY SCRAPE
-              ↓
-     INDEPENDENT VALIDATION
-              ↓
-  ┌───────────┴───────────┐
-  ↓                       ↓
-VERIFIED              FAILED
-  ↓                       ↓
-PHASE 6 METRICS       MANUAL REVIEW
+                 SCRAPE SENTINEL AI
+                         │
+                         ▼
+            BRIGHT DATA SCRAPER STUDIO
+               (c_mt46lngz2asqzj8tkj)
+                         │
+                         ▼
+                RAW JSON EXTRACTION
+                         │
+                         ▼
+                 VALIDATION ENGINE
+                         │
+            ┌────────────┴────────────┐
+            │                         │
+         HEALTHY                   FAILURE
+            │                         │
+            │                         ▼
+            │                  AI DIAGNOSIS
+            │                         │
+            │                         ▼
+            │                  ROOT CAUSE + EVIDENCE
+            │                         │
+            │                         ▼
+            │                  REPAIR PLAN
+            │                         │
+            │                         ▼
+            │                   SAFETY GATE
+            │                         │
+            │                         ▼
+            │                  SELF-HEALING ENGINE
+            │                         │
+            │                         ▼
+            │                  RECOVERY SCRAPE
+            │                         │
+            │                         ▼
+            └────────────────►  VALIDATION ENGINE
+                                      │
+                             ┌────────┴────────┐
+                             ▼                 ▼
+                         VERIFIED            FAILED
+                             │                 │
+                             ▼                 ▼
+                     HEALTH IMPROVES     MANUAL REVIEW
+                             │
+                             ▼
+                     RELIABILITY DASHBOARD
 ```
 
-## Phase 7 AI Features
+---
 
-- **Provider Abstraction**: Pluggable provider interface (`BaseAIProvider`) supporting `MockAIProvider` (offline/testing) and `OpenAIProvider` (`gpt-4o-mini`).
-- **Explainable Diagnosis**: Generates structured JSON root cause analysis with evidence bullet points and affected field lists.
-- **Safety Gate & Risk Policy**: Evaluates confidence ($\ge 0.85$ + LOW risk $\rightarrow$ Automatic Approval; Medium/Low confidence $\rightarrow$ Manual Human Review).
-- **Repair Allowlist**: Enforces strict repair type allowlist (`selector_update`, `field_mapping_update`, `schema_mapping_update`, `normalization_update`, `retry_adjustment`). Destructive operations are **BLOCKED**.
+## Key Features
+
+- **Bright Data Scraper Studio Custom Collector**: Custom collector instance (`c_mt46lngz2asqzj8tkj`) created in Scraper Studio for scraping public technical changelogs.
+- **Deterministic Validation Engine**: Validates required fields, schema structure, date formats, URL integrity, duplicates, and record count anomalies.
+- **Explainable AI Root-Cause Analysis**: Builds compact failure context, calculates schema diffs, collects historical evidence, and determines root cause.
+- **Safety Gate & Risk Policy**: Evaluates confidence thresholds ($\ge 0.85$ + LOW risk $\rightarrow$ Automatic Repair Approval; Medium/Low confidence $\rightarrow$ Manual Human Review).
+- **Strict Repair Allowlist**: Restricts repairs to safe types (`selector_update`, `field_mapping_update`, `schema_mapping_update`, `normalization_update`). Destructive commands are **BLOCKED**.
 - **Prompt Injection Defense**: Encapsulates scraped web payload data under `<UNTRUSTED_WEB_DATA>` to prevent prompt overrides or injection attacks.
-- **Repair Loop Protection**: Enforces maximum 3 repair attempts per failure event before forcing manual review.
-- **AI Fallback**: If AI is disabled or unavailable, seamlessly falls back to Phase 5 deterministic healing without application crash.
-- **AI Endpoints**:
-  - `GET /ai/status`
-  - `POST /ai/diagnose/{failure_id}`
-  - `POST /ai/repair-plan/{failure_id}`
-  - `GET /ai/history`
+- **Invariant Collector Lineage**: Recovery scrapes re-run using the **SAME** Collector ID (`c_mt46lngz2asqzj8tkj`), maintaining data lineage continuity.
+- **Independent Verification**: Recovery is only declared `VERIFIED` when independent validation returns a passing score (`100/100`).
+- **Reliability & Telemetry Dashboard**: Real-time System Health Score (0–100), MTTR in seconds, recovery rate %, activity feed timeline, and validation quality trends.
+
+---
 
 ## Technology Stack
 
-- **Frontend**: React + TypeScript + Vite + Tailwind CSS + Lucide Icons
-- **Backend**: Python + FastAPI + SQLAlchemy 2.0 + psycopg2-binary
 - **Scraping Engine**: Bright Data Scraper Studio (`@brightdata/cli`)
+- **Backend API**: Python 3.14 + FastAPI + SQLAlchemy 2.0 + Pydantic v2
+- **Frontend UI**: React + TypeScript + Vite + Tailwind CSS + Lucide Icons
 - **Database**: PostgreSQL / Supabase
-- **Testing**: Pytest unit test suite (32 passing tests)
+- **AI Providers**: Google Gemini REST API (`gemini-1.5-flash`), OpenAI (`gpt-4o-mini`), Mock Provider
+- **Testing**: Pytest unit test suite (33 passing tests)
 
-## Development Phases
+---
 
-- [x] Phase 1: Architecture and target selection
-- [x] Phase 2: Project scaffold and configuration
-- [x] Phase 3: Bright Data custom scraper integration
-- [x] Phase 4: Validation, failure detection & Supabase database
-- [x] Phase 5: Self-healing scraper engine foundation & `healing_attempts`
-- [x] Phase 6: Observability, monitoring & reliability dashboard
-- [x] Phase 7: AI-powered scraper intelligence & safety gate
-- [ ] Phase 8: Automation & webhooks
-- [ ] Phase 9: Testing & security audit
-- [ ] Phase 10: Final submission & demo
+## Quick Start Setup
 
-## Local Run Commands
+### 1. Prerequisites
+- Python 3.10+ (Python 3.14 supported)
+- Node.js 18+ & npm
+- PostgreSQL database (or Supabase)
 
-### Backend Migration & Server
+### 2. Environment Configuration
+Copy `.env.example` to `.env` and fill in your credentials:
+
 ```bash
-cd backend
-.venv\Scripts\python app/core/run_migrations.py
-.venv\Scripts\uvicorn main:app --reload --port 8000
+cp .env.example .env
 ```
 
-### Frontend Development
+### 3. Backend Setup & Database Migrations
+```bash
+cd backend
+python -m venv .venv
+.venv\Scripts\activate      # Windows (.venv/bin/activate on Linux/macOS)
+pip install -r requirements.txt
+python app/core/run_migrations.py
+uvicorn main:app --reload --port 8000
+```
+
+### 4. Frontend Setup
 ```bash
 cd frontend
+npm install
 npm run dev
 ```
 
-### Access Points
-- **Frontend Dashboard**: http://localhost:5173
-- **Backend API Docs**: http://localhost:8000/docs
-- **Backend Health Check**: http://localhost:8000/health
-- **AI Status API**: http://localhost:8000/ai/status
+---
+
+## Environment Variables
+
+| Variable | Description | Example Placeholder |
+| :--- | :--- | :--- |
+| `DATABASE_URL` | PostgreSQL connection string | `postgresql://user:pass@localhost:5432/postgres` |
+| `BRIGHTDATA_API_KEY` | Bright Data API Key | `your_bright_data_api_key` |
+| `BRIGHT_DATA_USERNAME` | Bright Data account email | `your_email@example.com` |
+| `BRIGHT_DATA_COLLECTOR_ID` | Scraper Studio Collector ID | `c_mt46lngz2asqzj8tkj` |
+| `AI_PROVIDER` | AI provider (`google`, `openai`, `mock`) | `google` |
+| `AI_MODEL` | AI LLM model name | `gemini-1.5-flash` |
+| `AI_API_KEY` | Google Gemini or OpenAI API Key | `your_ai_api_key` |
+| `AI_ENABLED` | Enable/disable AI layer | `true` |
+| `AI_TIMEOUT_SECONDS` | Timeout for AI requests | `15` |
+| `AI_MAX_TOKENS` | Token limit for AI responses | `1000` |
+
+---
+
+## Bright Data Scraper Studio Role
+Scrape Sentinel AI uses a **CUSTOM** collector built inside **Bright Data Scraper Studio** (`c_mt46lngz2asqzj8tkj`). The collector targets public developer release logs (`https://supabase.com/changelog`) and extracts structured JSON containing title, publication date, category, description, and direct link.
+
+---
+
+## Limitations
+- **Structural Anomaly Limits**: Web page layout changes that remove content entirely require manual template re-authoring.
+- **Anti-Bot Protections**: Target websites with aggressive anti-bot protections rely on Bright Data's proxy rotation and unlocking capabilities.
+- **Safety Boundaries**: High-risk or low-confidence repair recommendations are intentionally withheld from auto-execution and flagged for manual review.
+
+---
 
 ## AI Disclosure
+AI coding tools (including Antigravity / Gemini) were utilized during project development for pair programming, test suite scaffolding, documentation, and architectural planning. All submitted code, scraper integrations, safety boundaries, and database schemas were reviewed, tested, modified, and understood by the project participant.
 
-This project utilizes AI coding assistance (including Antigravity / Gemini) during development for architectural planning, code scaffolding, documentation generation, and pair programming. All generated code is reviewed, tested, modified, and fully understood by the project participant.
+---
+
+## License
+This project is licensed under the [MIT License](LICENSE).

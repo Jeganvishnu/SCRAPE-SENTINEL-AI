@@ -1,0 +1,12 @@
+{
+  "id": "c1d2e3f4-5678-90ab-cdef-123456789012",
+  "source_id": "a1b2c3d4-e5f6-7890-abcd-1234567890ab",
+  "failure_event_id": "e4a89b12-9876-4321-8888-111122223333",
+  "collector_id": "c_mt46lngz2asqzj8tkj",
+  "attempt_number": 1,
+  "started_at": "2026-08-22T08:15:30Z",
+  "completed_at": "2026-08-22T08:16:15Z",
+  "status": "verified",
+  "failure_type": "REQUIRED_FIELD_MISSING",
+  "verification_run_id": "99998888-7777-6666-5555-444433332222"
+}

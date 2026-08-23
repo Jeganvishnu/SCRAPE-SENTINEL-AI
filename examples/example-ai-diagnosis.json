@@ -1,0 +1,36 @@
+{
+  "id": "77777777-8888-9999-aaaa-bbbbccccdddd",
+  "source_id": "a1b2c3d4-e5f6-7890-abcd-1234567890ab",
+  "failure_event_id": "e4a89b12-9876-4321-8888-111122223333",
+  "model": "gpt-4o-mini",
+  "prompt_version": "scrape-sentinel-diagnosis-v1",
+  "failure_category": "missing_field",
+  "confidence": 0.92,
+  "root_cause": "Target web page DOM selector mismatch resulting in missing required 'title' field across extracted records.",
+  "evidence": [
+    "Extractor returned payload without required 'title' property",
+    "Historical baseline contained valid text title for all records",
+    "Page structure updated heading tags from h2.title to h2[data-title]"
+  ],
+  "repair_type": "selector_update",
+  "repair_plan": {
+    "repair_type": "selector_update",
+    "target": "Supabase Changelog",
+    "changes": [
+      {
+        "field": "title",
+        "selector": "[data-title]"
+      }
+    ],
+    "reason": "Update DOM selector for target field to match new site structure.",
+    "confidence": 0.92,
+    "risk": "low",
+    "verification_required": true,
+    "allowed": true
+  },
+  "risk": "low",
+  "approved": true,
+  "requires_manual_review": false,
+  "verification_status": "verified",
+  "created_at": "2026-08-22T08:15:15Z"
+}

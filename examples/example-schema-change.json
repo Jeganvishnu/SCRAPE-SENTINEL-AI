@@ -1,0 +1,19 @@
+{
+  "source_id": "a1b2c3d4-e5f6-7890-abcd-1234567890ab",
+  "previous_schema_fingerprint": "a9f8b7c6d5e43210",
+  "current_schema_fingerprint": "102345e4d5c6b7f8",
+  "schema_change_detected": true,
+  "schema_diff": {
+    "removed_fields": ["title"],
+    "added_fields": ["header_title"],
+    "unchanged_fields": ["published_date", "category", "url"]
+  },
+  "ai_recommendation": {
+    "repair_type": "field_mapping_update",
+    "proposed_mapping": {
+      "header_title": "title"
+    },
+    "confidence": 0.95,
+    "risk": "low"
+  }
+}

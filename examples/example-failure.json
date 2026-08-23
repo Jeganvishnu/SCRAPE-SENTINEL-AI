@@ -1,0 +1,21 @@
+{
+  "id": "e4a89b12-9876-4321-8888-111122223333",
+  "source_id": "a1b2c3d4-e5f6-7890-abcd-1234567890ab",
+  "scrape_run_id": "f9e8d7c6-b5a4-3210-9876-543210fedcba",
+  "failure_type": "REQUIRED_FIELD_MISSING",
+  "severity": "high",
+  "message": "Validation Engine detected missing required property 'title' across 100% of extracted records.",
+  "details": {
+    "validation_score": 45.0,
+    "issues": [
+      {
+        "type": "missing_field",
+        "field": "title",
+        "severity": "critical",
+        "message": "Field 'title' returned empty or null for all record items."
+      }
+    ]
+  },
+  "status": "open",
+  "detected_at": "2026-08-22T08:15:00Z"
+}
