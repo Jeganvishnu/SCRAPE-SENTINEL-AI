@@ -7,16 +7,20 @@ from app.core.logger_config import logger
 from app.models.ai_diagnosis import AIDiagnosis
 from app.ai.providers.mock_provider import MockAIProvider
 from app.ai.providers.openai_provider import OpenAIProvider
+from app.ai.providers.google_provider import GoogleGeminiProvider
 from app.ai.context_builder import context_builder
 from app.ai.repair_planner import repair_planner
 from app.ai.safety_gate import safety_gate
 
 class DiagnosisService:
-    def __init__(self):
-        if settings.AI_PROVIDER == "openai":
-            self.provider = OpenAIProvider()
+    def get_provider(self):
+        prov = settings.AI_PROVIDER.lower()
+        if prov == "google" or prov == "gemini":
+            return GoogleGeminiProvider()
+        elif prov == "openai":
+            return OpenAIProvider()
         else:
-            self.provider = MockAIProvider()
+            return MockAIProvider()
 
     def diagnose_and_plan(self, db: Session, failure_event_id: uuid.UUID) -> Optional[Dict[str, Any]]:
         # 1. Build failure context
@@ -25,21 +29,24 @@ class DiagnosisService:
             logger.warning(f"Failure context for event '{failure_event_id}' not found.")
             return None
 
-        # 2. Analyze failure with AI provider (or safe fallback)
+        # 2. Select AI Provider
+        provider = self.get_provider()
+
+        # 3. Analyze failure with AI provider (or safe fallback)
         try:
-            raw_diag = self.provider.analyze_failure(ctx)
+            raw_diag = provider.analyze_failure(ctx)
         except Exception as e:
             logger.error(f"AI provider failed during failure analysis: {e}. Using MockAIProvider fallback.")
             raw_diag = MockAIProvider().analyze_failure(ctx)
 
-        # 3. Generate repair plan
-        raw_plan = self.provider.generate_repair_plan(raw_diag, ctx)
+        # 4. Generate repair plan
+        raw_plan = provider.generate_repair_plan(raw_diag, ctx)
         structured_plan = repair_planner.generate_plan(raw_plan, ctx)
 
-        # 4. Evaluate through Safety Gate
+        # 5. Evaluate through Safety Gate
         gate_res = safety_gate.evaluate(structured_plan, ctx)
 
-        # 5. Persist AI reasoning metadata to database
+        # 6. Persist AI reasoning metadata to database
         db_diag = AIDiagnosis(
             source_id=uuid.UUID(ctx["source_id"]),
             failure_event_id=failure_event_id,
