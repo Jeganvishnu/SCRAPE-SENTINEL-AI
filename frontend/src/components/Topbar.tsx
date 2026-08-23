@@ -10,7 +10,7 @@ export const Topbar: React.FC = () => {
     setIsChecking(true);
     try {
       const data = await getHealth();
-      if (data && data.status === 'ok') {
+      if (data && (data.status === 'healthy' || data.status === 'ok')) {
         setIsOnline(true);
       } else {
         setIsOnline(false);
