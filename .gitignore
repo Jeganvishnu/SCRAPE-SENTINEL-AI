@@ -29,3 +29,10 @@ yarn-error.log*
 .idea/
 .DS_Store
 Thumbs.db
+
+# Generated Demo Media (Local Only)
+demo/screenshots/
+demo/video/
+demo/*.png
+demo/*.mp4
+demo/*.webm

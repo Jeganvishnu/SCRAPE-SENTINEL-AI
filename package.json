@@ -1,0 +1,23 @@
+{
+  "name": "scrape-sentinel-ai",
+  "version": "1.0.0",
+  "description": "An explainable self-healing web scraping platform powered by Bright Data Scraper Studio",
+  "main": "scripts/capture_demo.js",
+  "type": "module",
+  "scripts": {
+    "capture-demo": "node scripts/capture_demo.js",
+    "demo": "node scripts/capture_demo.js"
+  },
+  "keywords": [
+    "bright-data",
+    "web-scraping",
+    "self-healing",
+    "ai",
+    "observability"
+  ],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "playwright": "^1.62.1"
+  }
+}
