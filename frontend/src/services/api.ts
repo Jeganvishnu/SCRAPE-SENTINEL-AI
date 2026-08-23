@@ -1,6 +1,6 @@
 import { Source, ScrapeRun, HealingEvent } from '../types';
 
-const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:8000';
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || (import.meta.env.PROD ? '' : 'http://localhost:8000');
 
 export async function getHealth(): Promise<any> {
   const response = await fetch(`${BACKEND_URL}/health`, {

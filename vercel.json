@@ -1,0 +1,64 @@
+{
+  "version": 2,
+  "buildCommand": "cd frontend && npm install && npm run build",
+  "outputDirectory": "frontend/dist",
+  "framework": "vite",
+  "rewrites": [
+    {
+      "source": "/health",
+      "destination": "/api/index.py"
+    },
+    {
+      "source": "/ready",
+      "destination": "/api/index.py"
+    },
+    {
+      "source": "/system/:path*",
+      "destination": "/api/index.py"
+    },
+    {
+      "source": "/sources/:path*",
+      "destination": "/api/index.py"
+    },
+    {
+      "source": "/sources",
+      "destination": "/api/index.py"
+    },
+    {
+      "source": "/runs/:path*",
+      "destination": "/api/index.py"
+    },
+    {
+      "source": "/runs",
+      "destination": "/api/index.py"
+    },
+    {
+      "source": "/failures/:path*",
+      "destination": "/api/index.py"
+    },
+    {
+      "source": "/failures",
+      "destination": "/api/index.py"
+    },
+    {
+      "source": "/metrics/:path*",
+      "destination": "/api/index.py"
+    },
+    {
+      "source": "/ai/:path*",
+      "destination": "/api/index.py"
+    },
+    {
+      "source": "/docs",
+      "destination": "/api/index.py"
+    },
+    {
+      "source": "/openapi.json",
+      "destination": "/api/index.py"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
+  ]
+}
